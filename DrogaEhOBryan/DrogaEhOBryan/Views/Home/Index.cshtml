@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Carro>
+@{
+    ViewData["Title"] = "Carros";
+}
+
+<div class="text-center">
+    @{
+        var chama = ViewBag;
+        var paginaAtual = ViewBag.paginaAtual;
+        var itensPorPagina = ViewBag.ItensPorPagina;
+        var numeroDeProximasPaginas = ViewBag.numeroDeProximasPaginas;
+        var numeroDePaginasAnterores = ViewBag.numeroDePaginasAnterores;
+     }
+
+
+    <h1 class="display-4">Carros: @Context.Request.Query["paginaAtual"]</h1>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+    {
+        <form class="form-group">
+            <div class="row">
+                <div class="col-lg-8">
+                    <input class="form-control" name="q" />
+                </div>
+                <div class="col-lg-4">
+                    <button type="submit" class="btn btn-primary">Busca</button>
+                </div>
+            </div>
+        </form>
+    }
+    <div class="card-container">
+        @foreach (var carroAtual in Model)
+        {
+            var routeData = new Dictionary<string, string>();
+            var routeDataMarca = new Dictionary<string, string>();
+
+            routeData["id"] = carroAtual.Id.ToString();
+            routeDataMarca["id"] = carroAtual.MarcaId.ToString();
+
+            <div class="card">
+                <img class="card-img" src="@carroAtual.image" />
+                <div class="card-body">
+                    <h5 class="card-title">@carroAtual.title</h5>
+                    @if (@carroAtual.start_production != default)
+                    {
+                        <p class="card-subtitle">@carroAtual.start_production</p>
+                    }
+                    <p class="card-text">@carroAtual.Class</p>
+                    <span class="nav-link text-dark">@carroAtual.Marca.Nome</span>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="EditarCarro" asp-all-route-data="@routeData">Editar carro</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ExcluirCarro" asp-all-route-data="@routeData">Excluir carro</a>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="container-paginacao">
+        @if (paginaAtual >= 3)
+        {
+            @for (int i = 2; i > numeroDePaginasAnterores; i--)
+            {
+                var opcoesDePaginasAnteriores = paginaAtual - i;
+                <a class="btn btn-default" href="?paginaAtual=@opcoesDePaginasAnteriores">@opcoesDePaginasAnteriores</a>
+
+            }
+        }
+        @for (int i = 1; i <= numeroDeProximasPaginas; i++)
+        {
+            var opcoesDeProximasPaginas = paginaAtual + i;
+            <a class="btn btn-default" href="?paginaAtual=@opcoesDeProximasPaginas">@opcoesDeProximasPaginas <br /></a>
+        }
+        <br />
+        @{
+            var paginaAtual_1 = paginaAtual - 1;
+            var paginaAtual_2 = paginaAtual + 1;
+        }
+        @if (paginaAtual >= 2)
+        {
+            <a class="btn btn-default" href="?paginaAtual=@paginaAtual_1">Anterior</a>
+        }
+        <br />
+        <a class="btn btn-default" href="?paginaAtual=@paginaAtual_2">Proxima</a>
+
+
+    </div>
+
+</div>

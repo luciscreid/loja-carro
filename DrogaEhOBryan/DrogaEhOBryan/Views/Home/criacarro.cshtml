@@ -1,0 +1,65 @@
+﻿@model Repositorio.Models.Carro
+
+@{
+    ViewData["Title"] = "criacarro";
+}
+
+<h1>Cria carro</h1>
+
+<h4>Crie: </h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="criacarro" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="image" class="control-label">Image</label>
+                <input asp-for="image" class="form-control" />
+                <span asp-validation-for="image" class="text-danger"></span>
+                @*<span>Image</span> @Html.TextBoxFor(m => m.image)<br />
+                <span>Name</span> @Html.TextBoxFor(m => m.title)<br />
+                <span>Start Production</span>@Html.TextBoxFor(m => m.start_production)<br />
+                <span>Class</span>@Html.TextBoxFor(m => m.Class)<br />*@
+            </div>
+            <div class="form-group">
+                <label asp-for="title" class="control-label">Name</label>
+                <input asp-for="title" class="form-control" />
+                <span asp-validation-for="title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="start_production" class="control-label">Start Production</label>
+                <input asp-for="start_production" class="form-control" />
+                <span asp-validation-for="start_production" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Class" class="control-label">Class</label>
+                <input asp-for="Class" class="form-control" />
+                <span asp-validation-for="Class" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MarcaId" class="control-label">Marca</label>
+                <div>
+                    @foreach (var marca in ViewBag.Marcas)
+                    {
+                        <button type="button" class="btn btn-primary" onclick="selectMarca('@marca.Nome', '@marca.Id')">@marca.Nome</button>
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

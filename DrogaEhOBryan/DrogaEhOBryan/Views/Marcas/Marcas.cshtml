@@ -1,0 +1,83 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<Marca>
+@{
+    ViewData["Title"] = "Marcas";
+}
+
+<div class="text-center">
+    @{
+        var chama = ViewBag;
+        var paginaAtual = ViewBag.paginaAtual;
+        var itensPorPagina = ViewBag.ItensPorPagina;
+        var numeroDeProximasPaginas = ViewBag.numeroDeProximasPaginas;
+        var numeroDePaginasAnterores = ViewBag.numeroDePaginasAnterores;
+    }
+
+
+    <h1 class="display-4">Marcas: @Context.Request.Query["paginaAtual"]</h1>
+    @using (Html.BeginForm("Marcas", "Marcas", FormMethod.Get))
+    {
+        <form class="form-group">
+            <div class="row">
+                <div class="col-lg-8">
+                    <input class="form-control" name="q" />
+                </div>
+                <div class="col-lg-4">
+                    <button type="submit" class="btn btn-primary">Busca</button>
+                </div>
+            </div>
+        </form>
+    }
+    <div class="card-container">
+        @foreach (var marcaAtual in Model)
+        {
+            var routeData = new Dictionary<string, string>();
+
+            routeData["id"] = marcaAtual.Id.ToString();
+
+
+            <div class="card">
+                <img class="card-img" src="@marcaAtual.Logo" />
+                <div class="card-body">
+                    <h5 class="card-title">@marcaAtual.Nome</h5>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Marcas" asp-action="EditarMarca" asp-all-route-data="@routeData">Editar marca</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Marcas" asp-action="ExcluirMarca" asp-all-route-data="@routeData">Excluir marca</a>
+
+                </div>
+            </div>
+        }
+    </div>
+    <div class="container-paginacao">
+        @if (paginaAtual >= 3)
+        {
+            @for (int i = 2; i > numeroDePaginasAnterores; i--)
+            {
+                var opcoesDePaginasAnteriores = paginaAtual - i;
+                <a class="btn btn-default" href="?paginaAtual=@opcoesDePaginasAnteriores">@opcoesDePaginasAnteriores</a>
+
+            }
+        }
+        @for (int i = 1; i <= numeroDeProximasPaginas; i++)
+        {
+            var opcoesDeProximasPaginas = paginaAtual + i;
+            <a class="btn btn-default" href="?paginaAtual=@opcoesDeProximasPaginas">@opcoesDeProximasPaginas <br /></a>
+        }
+        <br />
+        @{
+            var paginaAtual_1 = paginaAtual - 1;
+            var paginaAtual_2 = paginaAtual + 1;
+        }
+        @if (paginaAtual >= 2)
+        {
+            <a class="btn btn-default" href="?paginaAtual=@paginaAtual_1">Anterior</a>
+        }
+        <br />
+        <a class="btn btn-default" href="?paginaAtual=@paginaAtual_2">Proxima</a>
+
+
+    </div>
+
+</div>
